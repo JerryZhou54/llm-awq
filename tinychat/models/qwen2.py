@@ -480,9 +480,9 @@ class Qwen2ForCausalLM(Qwen2ForCausalLM):
         output_list = []
         start_pos = 0
         if quant_llm:
-            forwardfunc = self.forward
+            forwardfunc = self.model.forward
         else:
-            forwardfunc = self.forwardfp16
+            forwardfunc = self.model.forwardfp16
         for i in range(10):
             torch.cuda.synchronize()
             tst = time.time()

@@ -50,6 +50,7 @@ def main() -> None:
     # Four basic tasks
     parser.add_argument("--video_caption", action="store_true")
     parser.add_argument("--video_QA", action="store_true")
+    parser.add_argument("--num_video_frames", type=int, default=8)
     parser.add_argument("--image_caption", action="store_true")
     parser.add_argument("--image_QA", action="store_true")
 
@@ -85,6 +86,7 @@ def main() -> None:
 
     config = AutoConfig.from_pretrained(args.model_path)
     config.resume_path = args.model_path
+    config.num_video_frames = args.num_video_frames
     model = NVILAQwen2(config).half()
     model.llm = model.llm.eval()
     if args.quant_llm or args.all:
@@ -98,6 +100,7 @@ def main() -> None:
         make_quant_norm(model.llm)
         make_fused_mlp(model.llm)
         model = model.to("cuda")
+        print(model.llm)
     model = model.to(args.device)
     if args.quant_VT or args.all:
         from tinychat.modules import QuantSiglipEncoder
